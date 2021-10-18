@@ -1,0 +1,17 @@
+body {
+  background-image: url("background.jpeg");
+  color: #151d24;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.text-btn {
+  background-color: #fff;
+  color: #5f5778;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.text-btn:hover {
+  color: #2d2a39;
+}
