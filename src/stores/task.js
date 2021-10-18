@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 
-const baseURL = "http://localhost:3000/tasks";
+const baseURL = "https://todo-list-api-fmdev.herokuapp.com/tasks";
 
 const store = () => {
   const state = {
