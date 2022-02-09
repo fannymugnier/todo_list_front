@@ -8,6 +8,7 @@
   $: activeFilter = $taskStore.activeFilter;
   $: emptyTask = $taskStore.emptyTask;
   let filteredTasks;
+  let isLoading = true;
 
   $: if (activeFilter === "todo") {
        filteredTasks = tasks.filter(task => !task.done)
@@ -17,6 +18,7 @@
 
   onMount(async () => {
     await taskStore.getTasks();
+    isLoading = false;
   })
 
   $: isInEditMode = (id) => {
@@ -32,31 +34,34 @@
       <button class="text-btn" on:click={() => taskStore.filterTasks("todo")}>Todo</button>
       <button class="text-btn" on:click={() => taskStore.filterTasks("done")}>Done</button>
     </div>
-    {#if !filteredTasks.length}
-      <br>
-      There is no task here.
-    {/if}
-    <div id="todo-list">
-      <ul>
-        {#if activeFilter === "todo"}
-          <li class="new-task">
-            <TaskForm task={emptyTask} />
-          </li>
+      {#if isLoading}
+        Loading tasks...
+      {:else}
+        {#if !filteredTasks.length}
+          There is no task here.
         {/if}
-        {#each filteredTasks as task (task.id)}
-        <li class="task">
-          {#if isInEditMode(task.id)}
-            <TaskForm task={editTask} />
-          {:else}
-            <input type="checkbox" checked={task.done} name="done" on:change={() => taskStore.toggleDoneStatus(task)}>
-            <p>{task.title}</p>
-            <button on:click={() => taskStore.enableEdit(task)} class="icon-btn"><i class="fas fa-pencil-alt"></i></button>
-            <button on:click={() => taskStore.deleteTask(task)} class="icon-btn"><i class="fas fa-trash"></i></button>
-          {/if}
-        </li>
-        {/each}
-      </ul>
-    </div>
+        <div id="todo-list">
+          <ul>
+            {#if activeFilter === "todo"}
+              <li class="new-task">
+                <TaskForm task={emptyTask} />
+              </li>
+            {/if}
+            {#each filteredTasks as task (task.id)}
+            <li class="task">
+              {#if isInEditMode(task.id)}
+                <TaskForm task={editTask} />
+              {:else}
+                <input type="checkbox" checked={task.done} name="done" on:change={() => taskStore.toggleDoneStatus(task)}>
+                <p>{task.title}</p>
+                <button on:click={() => taskStore.enableEdit(task)} class="icon-btn"><i class="fas fa-pencil-alt"></i></button>
+                <button on:click={() => taskStore.deleteTask(task)} class="icon-btn"><i class="fas fa-trash"></i></button>
+              {/if}
+            </li>
+            {/each}
+          </ul>
+        </div>
+      {/if}
   </div>
 </main>
 
@@ -80,6 +85,7 @@
 
   #filter-options {
     padding-bottom: 10px;
+    margin-bottom: 10px;
     border-bottom: 1px solid;
     border-image: linear-gradient(to right, #640e95, #89c7f47a) 1;
   }
